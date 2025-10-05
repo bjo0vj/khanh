@@ -225,9 +225,13 @@
     <span>❤</span>
   </div>
 
+  <!-- Nút nhạc -->
   <button id="musicBtn">🔈</button>
+
+  <!-- File nhạc của bạn -->
   <audio id="bgm" loop>
-    <source src="https://assets.mixkit.co/music/preview/mixkit-gentle-soft-music-583.mp3" type="audio/mpeg">
+    <source src="mp3music.mp3" type="audio/mpeg">
+    Trình duyệt của bạn không hỗ trợ phát nhạc.
   </audio>
 
   <script>
@@ -239,13 +243,15 @@
       const musicBtn = document.getElementById('musicBtn');
       const envelope = document.getElementById('envelope');
 
+      // Click phong bì
       envelope.addEventListener('click', ()=>{
         flap.classList.toggle('open');
         seal.style.opacity = flap.classList.contains('open') ? '0' : '1';
         if(flap.classList.contains('open')){
           setTimeout(()=>letter.classList.add('show'), 600);
-          bgm.play().catch(()=>{});
-          musicBtn.innerText='🔊';
+          // Phát nhạc khi mở phong bì
+          bgm.play().then(()=> musicBtn.innerText='🔊')
+            .catch(()=> console.log("Autoplay bị chặn, click để bật nhạc."));
         }else{
           letter.classList.remove('show');
           bgm.pause();
@@ -253,6 +259,7 @@
         }
       });
 
+      // Nút bật/tắt nhạc
       musicBtn.addEventListener('click', ()=>{
         if(bgm.paused){
           bgm.play().catch(()=>{});
@@ -262,6 +269,14 @@
           musicBtn.innerText='🔈';
         }
       });
+
+      // Cho phép phát nhạc sau click đầu tiên
+      document.addEventListener("click", ()=>{
+        if (bgm.paused) {
+          bgm.play().catch(()=>{});
+          musicBtn.innerText='🔊';
+        }
+      }, { once:true });
     });
   </script>
 </body>
