@@ -22,9 +22,9 @@
       gap:60px;
       padding:40px;
       overflow:hidden;
+      position:relative;
     }
 
-    /* Ảnh bên trái */
     .image-box{
       width:300px;
       height:300px;
@@ -54,7 +54,6 @@
     }
     .envelope:hover{ transform:translateY(-6px); }
 
-    /* mặt trong phong bì (màu hồng đậm hơn) */
     .inner-cover{
       position:absolute;
       inset:0;
@@ -62,7 +61,6 @@
       z-index:5;
     }
 
-    /* nắp phong bì */
     .flap{
       position:absolute; left:0; right:0; top:0;
       height:var(--flap-h);
@@ -76,15 +74,16 @@
     .flap.open{
       transform:rotateX(180deg);
       opacity:.95;
-      z-index:2; /* đẩy nắp ra sau khi mở */
+      z-index:2;
     }
 
-    /* con dấu */
     .seal{
       position:absolute;
       top:calc(var(--flap-h) - 35px);
-      left:50%; transform:translateX(-50%);
-      width:86px;height:86px;border-radius:50%;
+      left:50%;
+      transform:translateX(-50%);
+      width:86px;height:86px;
+      border-radius:50%;
       background:white;color:#e22;
       display:flex;align-items:center;justify-content:center;
       font-size:40px;
@@ -93,7 +92,6 @@
       transition:opacity .4s;
     }
 
-    /* khe chứa thư */
     .pocket{
       position:absolute;
       inset:0;
@@ -102,7 +100,6 @@
       z-index:10;
     }
 
-    /* lá thư */
     .letter{
       position:absolute;
       left:50%;
@@ -116,30 +113,12 @@
       opacity:0;
       box-shadow:0 14px 30px rgba(0,0,0,0.18);
       transition:transform 1s cubic-bezier(.2,.9,.2,1), opacity 1s;
-      z-index:15; /* đè lên phần phong bì */
+      z-index:15;
       overflow-y:auto;
     }
-
-    /* hiệu ứng khi mở */
     .letter.show{
       transform:translate(-50%,0);
       opacity:1;
-    }
-
-    /* hiệu ứng lấp sáng */
-    .letter.show::before{
-      content:"";
-      position:absolute;
-      top:0;
-      left:0;
-      right:0;
-      height:2px;
-      background:linear-gradient(90deg,transparent,#ff80a0,transparent);
-      animation:sparkle 2s ease-out;
-    }
-    @keyframes sparkle{
-      0%{transform:translateX(-100%);}
-      100%{transform:translateX(100%);}
     }
 
     .letter::-webkit-scrollbar{width:7px;}
@@ -156,19 +135,27 @@
       margin:6px 0 40px;
     }
 
-    .final-heart{
-      position:absolute;
-      left:50%; bottom:-22px;
-      transform:translateX(-50%);
-      font-size:56px;
-      color:#ff1a3c;
-      filter:blur(.6px);
-      pointer-events:none;
-      animation:pulse 2s ease-in-out infinite;
+    /* 3 trái tim nền */
+    .heart-group {
+      position: fixed;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 20px;
+      z-index: 100;
     }
+    .heart-group span {
+      font-size: 42px;
+      color: #ff1a3c;
+      animation: pulse 2s ease-in-out infinite;
+      filter: drop-shadow(0 0 8px rgba(255,80,100,0.4));
+    }
+    .heart-group span:nth-child(2) { animation-delay: 0.3s; }
+    .heart-group span:nth-child(3) { animation-delay: 0.6s; }
     @keyframes pulse{
-      0%,100%{transform:translateX(-50%) scale(1);opacity:.8;}
-      50%{transform:translateX(-50%) scale(1.1);opacity:1;}
+      0%,100%{transform:scale(1);opacity:.8;}
+      50%{transform:scale(1.25);opacity:1;}
     }
 
     #musicBtn{
@@ -227,9 +214,15 @@
             - Người yêu của em -
           </p>
         </div>
-        <div class="final-heart">❤</div>
       </div>
     </div>
+  </div>
+
+  <!-- 3 trái tim nền -->
+  <div class="heart-group">
+    <span>❤</span>
+    <span>❤</span>
+    <span>❤</span>
   </div>
 
   <button id="musicBtn">🔈</button>
@@ -250,7 +243,6 @@
         flap.classList.toggle('open');
         seal.style.opacity = flap.classList.contains('open') ? '0' : '1';
         if(flap.classList.contains('open')){
-          // delay để nắp mở xong rồi thư mới trồi lên
           setTimeout(()=>letter.classList.add('show'), 600);
           bgm.play().catch(()=>{});
           musicBtn.innerText='🔊';
